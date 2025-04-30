@@ -6,7 +6,7 @@ import { Column, DataType, Model, Table } from "sequelize-typescript";
     timestamps: true,
     paranoid: true
 })
-export class User extends Model<User> {
+export class User extends Model {
 
     @Column({
         primaryKey: true,
@@ -76,5 +76,3 @@ export class User extends Model<User> {
     })
     isSuperuser: boolean;
 }
-
-export const usersProviders = [{ provide: 'UsersRepository', useValue: User }];

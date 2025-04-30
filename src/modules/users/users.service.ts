@@ -3,13 +3,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './models/user.model';
 import { PasswordService } from '@core/services/password.service';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class UsersService {
 
   constructor(
-    @Inject("UsersRepository")
-    private readonly userRepository: typeof User,
+    @InjectModel(User)
+    private readonly userModel: typeof User,
     private readonly passwordService: PasswordService
   ) {}
 
@@ -22,7 +23,7 @@ export class UsersService {
     const passwordHash = await this.passwordService.passwordHash(password);
 
     try {
-      await this.userRepository.create({
+      await this.userModel.create({
 
         username,
         email,
@@ -30,7 +31,7 @@ export class UsersService {
         active,
         isStaff,
         isSuperuser
-      } as User);
+      });
 
       return { message: "Usuario creado con exito", statusCode: 201 }
     } catch (error) {
@@ -42,7 +43,7 @@ export class UsersService {
 
   async findAll() {
 
-    const users = await this.userRepository.findAll<User>();
+    const users = await this.userModel.findAll<User>();
 
     if(users.length === 0) return { message: "No tenemos usuarios registrados", statusCode: 200 }
 
@@ -51,7 +52,7 @@ export class UsersService {
 
   async findOne(id: number) {
 
-    const user = await this.userRepository.findByPk<User>(id);
+    const user = await this.userModel.findByPk<User>(id);
 
     if(!user) throw new NotFoundException("Usuario no encontrado");
 
@@ -60,7 +61,7 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
 
-    const user = await this.userRepository.findByPk<User>(id);
+    const user = await this.userModel.findByPk<User>(id);
     
     if(!user) throw new NotFoundException("Usuario no encontrado");
 
@@ -81,7 +82,7 @@ export class UsersService {
 
   async remove(id: number) {
 
-    const user = await this.userRepository.findByPk<User>(id);
+    const user = await this.userModel.findByPk<User>(id);
 
     if(!user) throw new NotFoundException("Usuario no encontrado");
 
