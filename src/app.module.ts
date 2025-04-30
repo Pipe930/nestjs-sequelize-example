@@ -7,6 +7,7 @@ import { MorganInterceptor, MorganModule } from 'nest-morgan';
 import { AuthModule } from './modules/auth/auth.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from '@modules/users/models/user.model';
+import { RefreshToken } from '@modules/users/models/tokenJwt.model';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { User } from '@modules/users/models/user.model';
         username: configService.get('database.username'),
         password: configService.get('database.password'),
         database: configService.get('database.database'),
-        models: [User],
+        models: [User, RefreshToken],
         logging: false,
         synchronize: true,
         autoLoadModels: true

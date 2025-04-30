@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './models/user.model';
@@ -33,7 +33,7 @@ export class UsersService {
         isSuperuser
       });
 
-      return { message: "Usuario creado con exito", statusCode: 201 }
+      return { message: "Usuario creado con exito", statusCode: HttpStatus.CREATED }
     } catch (error) {
 
       if (error.name === "SequelizeUniqueConstraintError") throw new ConflictException("El email o el username ya estan registrados");
@@ -45,25 +45,24 @@ export class UsersService {
 
     const users = await this.userModel.findAll<User>();
 
-    if(users.length === 0) return { message: "No tenemos usuarios registrados", statusCode: 200 }
+    if(users.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.OK }
 
     return users;
   }
 
   async findOne(id: number) {
+    
+    const user = await this.userFindById(id);
 
-    const user = await this.userModel.findByPk<User>(id);
-
-    if(!user) throw new NotFoundException("Usuario no encontrado");
-
-    return user;
+    return {
+      message: HttpStatus.OK,
+      data: user
+    };
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
 
-    const user = await this.userModel.findByPk<User>(id);
-    
-    if(!user) throw new NotFoundException("Usuario no encontrado");
+    const user = await this.userFindById(id);
 
     try {
 
@@ -73,7 +72,7 @@ export class UsersService {
         }
       });
 
-      return { message: "Usuario actualizado correctamente", statusCode: 200 }
+      return { message: "Usuario actualizado correctamente", statusCode: HttpStatus.OK }
     } catch (error) {
       if (error.name === "SequelizeUniqueConstraintError") throw new ConflictException("El email o el username ya estan registrados");
       throw new InternalServerErrorException("Ocurrio un error interno en el servidor al actualizar un usuario");
@@ -82,12 +81,30 @@ export class UsersService {
 
   async remove(id: number) {
 
+    const user = await this.userFindById(id);
+
+    await user.destroy();
+
+    return { message: "Usuario eliminado exitosamente", statusCode: HttpStatus.NO_CONTENT };
+  }
+
+  async userFindByEmail(email: string): Promise<User | null>{
+
+    const user = await this.userModel.findOne({
+      where: {
+        email
+      }
+    });
+
+    return user;
+  }
+
+  async userFindById(id: number): Promise<User>{
+
     const user = await this.userModel.findByPk<User>(id);
 
     if(!user) throw new NotFoundException("Usuario no encontrado");
 
-    await user.destroy();
-
-    return { message: "Usuario eliminado exitosamente", statusCode: 204 };
+    return user;
   }
 }

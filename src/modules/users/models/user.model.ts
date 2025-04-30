@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, HasOne, Model, Table } from "sequelize-typescript";
+import { RefreshToken } from "./tokenJwt.model";
 
 @Table({
     tableName: "users",
@@ -75,4 +76,7 @@ export class User extends Model {
         field: "is_superuser"
     })
     isSuperuser: boolean;
+
+    @HasOne(() => RefreshToken)
+    refreshToken: RefreshToken;
 }
