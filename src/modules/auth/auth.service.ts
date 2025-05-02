@@ -1,12 +1,12 @@
 import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { SignInDto } from './dto/signin.dto';
-import { UsersService } from '@modules/users/users.service';
-import { PasswordService } from '@core/services/password.service';
+import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { RefreshToken } from '@modules/users/models/tokenJwt.model';
-import { User } from '@modules/users/models/user.model';
+import { RefreshToken } from '../users/models/tokenJwt.model'; 
+import { User } from '../users/models/user.model'; 
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 import { InjectModel } from '@nestjs/sequelize';
+import { compare } from 'bcryptjs';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +15,6 @@ export class AuthService {
         @InjectModel(RefreshToken)
         private readonly refreshTokenModel: typeof RefreshToken,
         private readonly userService: UsersService,
-        private readonly passwordService: PasswordService,
         private readonly jwtService: JwtService
 
     ){}
@@ -28,7 +27,7 @@ export class AuthService {
 
         if(!user) throw new BadRequestException("Usuario no encontrado con ese correo");
 
-        const passwordValid = await this.passwordService.comparePassword(password, user.dataValues.password);
+        const passwordValid = await compare(password, user.dataValues.password);
 
         if(!passwordValid) throw new BadRequestException("Credenciales invalidas");
 
@@ -70,7 +69,7 @@ export class AuthService {
 
         if(!refreshTokenFind) throw new NotFoundException("refresh token no encontrado");
 
-        const user = await this.userService.userFindById(refreshTokenFind.dataValues.idRefreshToken);
+        const user = await this.userService.findOne(refreshTokenFind.dataValues.idRefreshToken);
 
         const { accessToken, refreshToken } = await this.generateTokenJWT(user);
 
@@ -82,7 +81,7 @@ export class AuthService {
 
     async userProfile(id: number){
 
-        const user = await this.userService.userFindById(id);
+        const user = await this.userService.findOne(id);
 
         return {
             statusCode: HttpStatus.OK,

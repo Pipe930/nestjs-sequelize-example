@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signin.dto';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 import { Request } from 'express';
-import { AuthenticationGuard } from '@core/guards/authentication.guard';
+import { AuthenticationGuard } from '../../core/guards/authentication.guard'; 
 
 @Controller('auth')
 export class AuthController {

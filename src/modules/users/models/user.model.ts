@@ -12,7 +12,7 @@ export class User extends Model {
     @Column({
         primaryKey: true,
         autoIncrement: true,
-        type: DataType.INTEGER,
+        type: DataType.BIGINT,
         field: "id_user"
     })
     idUser: number;

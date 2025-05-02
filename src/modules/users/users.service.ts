@@ -1,17 +1,16 @@
-import { BadRequestException, ConflictException, HttpStatus, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './models/user.model';
-import { PasswordService } from '@core/services/password.service';
+import { User } from './models/user.model'; 
 import { InjectModel } from '@nestjs/sequelize';
+import { genSalt, hash } from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
 
   constructor(
     @InjectModel(User)
-    private readonly userModel: typeof User,
-    private readonly passwordService: PasswordService
+    private readonly userModel: typeof User
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -20,7 +19,9 @@ export class UsersService {
 
     if(password !== rePassword) throw new BadRequestException("Las contraseñas no coinciden");
 
-    const passwordHash = await this.passwordService.passwordHash(password);
+    const salt = await genSalt(10);
+
+    const passwordHash = await hash(password, salt);
 
     try {
       await this.userModel.create({
@@ -41,37 +42,45 @@ export class UsersService {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<User[]> {
 
-    const users = await this.userModel.findAll<User>();
-
-    if(users.length === 0) return { message: "No tenemos usuarios registrados", statusCode: HttpStatus.OK }
+    const users = await this.userModel.findAll<User>({
+      attributes: {
+        exclude: ["password"]
+      }
+    });
 
     return users;
   }
 
-  async findOne(id: number) {
-    
-    const user = await this.userFindById(id);
+  async findOne(id: number): Promise<User> {
 
-    return {
-      message: HttpStatus.OK,
-      data: user
-    };
+    const user = await this.userModel.findOne<User>({
+      where: {
+        idUser: id
+      },
+      attributes: {
+        exclude: ["password"]
+      }
+    });
+
+    if(!user) throw new NotFoundException("Usuario no encontrado");
+
+    return user;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
 
-    const user = await this.userFindById(id);
+    const user = await this.findOne(id);
 
     try {
-
+      
       await user.update(updateUserDto, {
         where: {
           idUser: id
         }
       });
-
+  
       return { message: "Usuario actualizado correctamente", statusCode: HttpStatus.OK }
     } catch (error) {
       if (error.name === "SequelizeUniqueConstraintError") throw new ConflictException("El email o el username ya estan registrados");
@@ -81,7 +90,7 @@ export class UsersService {
 
   async remove(id: number) {
 
-    const user = await this.userFindById(id);
+    const user = await this.findOne(id);
 
     await user.destroy();
 
@@ -95,15 +104,6 @@ export class UsersService {
         email
       }
     });
-
-    return user;
-  }
-
-  async userFindById(id: number): Promise<User>{
-
-    const user = await this.userModel.findByPk<User>(id);
-
-    if(!user) throw new NotFoundException("Usuario no encontrado");
 
     return user;
   }

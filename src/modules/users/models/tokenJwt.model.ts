@@ -11,7 +11,7 @@ export class RefreshToken extends Model {
     @ForeignKey(() => User)
     @Column({
         primaryKey: true,
-        type: DataType.INTEGER,
+        type: DataType.BIGINT,
         autoIncrement: true,
         field: "id_refresh_token"
     })
