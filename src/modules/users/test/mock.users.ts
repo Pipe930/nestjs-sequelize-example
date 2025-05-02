@@ -10,17 +10,17 @@ export const userObjectTest = {
     email: faker.internet.email(),
     password: passwordUserTest,
     rePassword: passwordUserTest,
-    active: true,
-    isStaff: false,
-    isSuperuser: false,
+    active: faker.datatype.boolean(),
+    isStaff: faker.datatype.boolean(),
+    isSuperuser: faker.datatype.boolean(),
 }
 
 export const userObjectTestUpdate = {
     username: faker.internet.username(),
     email: faker.internet.email(),
-    active: true,
-    isStaff: false,
-    isSuperuser: false,
+    active: faker.datatype.boolean(),
+    isStaff: faker.datatype.boolean(),
+    isSuperuser: faker.datatype.boolean(),
 }
 
 export const mockUsersService = {
@@ -42,11 +42,8 @@ export const mockUsersService = {
 
 export const mockUserModel = {
     create: jest.fn().mockImplementation(dto => dto),
-    update: jest.fn().mockImplementation((id, dto) => ({
-        id,
-        ...dto
-    })),
+    update: jest.fn().mockReturnValue([1]),
     findAll: jest.fn().mockResolvedValue([userObjectTest]),
     findOne: jest.fn().mockResolvedValue(userObjectTest),
-    destroy: jest.fn().mockImplementation(id => ({ message: `User ${id} removed` }))
+    destroy: jest.fn().mockResolvedValue(1)
 }

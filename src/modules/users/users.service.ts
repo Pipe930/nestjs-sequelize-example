@@ -71,28 +71,34 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
 
-    const user = await this.findOne(id);
+    let userUpdate: number;
 
     try {
-      
-      await user.update(updateUserDto, {
+      [userUpdate] = await this.userModel.update(updateUserDto, {
         where: {
           idUser: id
         }
       });
-  
-      return { message: "Usuario actualizado correctamente", statusCode: HttpStatus.OK }
+
     } catch (error) {
       if (error.name === "SequelizeUniqueConstraintError") throw new ConflictException("El email o el username ya estan registrados");
       throw new InternalServerErrorException("Ocurrio un error interno en el servidor al actualizar un usuario");
     }
+
+    if(userUpdate === 0) throw new NotFoundException("Usuario no encontrado");
+
+    return { message: "Usuario actualizado correctamente", statusCode: HttpStatus.OK }
   }
 
   async remove(id: number) {
 
-    const user = await this.findOne(id);
+    const userDelete = await this.userModel.destroy({
+      where: {
+        idUser: id
+      }
+    });
 
-    await user.destroy();
+    if(userDelete === 0) throw new NotFoundException("Usuario no encontrado");
 
     return { message: "Usuario eliminado exitosamente", statusCode: HttpStatus.NO_CONTENT };
   }
