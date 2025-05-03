@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PaginationUserDto } from './dto/pagination-user.dto';
+import { SearchUserDto } from './dto/search-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -13,8 +15,13 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() paginationUserDto: PaginationUserDto) {
+    return this.usersService.findAll(paginationUserDto);
+  }
+
+  @Get('search')
+  search(@Query() searchUserDto: SearchUserDto) {
+    return this.usersService.search(searchUserDto);
   }
 
   @Get(':id')

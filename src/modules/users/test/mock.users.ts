@@ -1,10 +1,27 @@
 import { faker } from "@faker-js/faker";
+import { PaginationUserDto } from "../dto/pagination-user.dto";
+import { CreateUserDto } from "../dto/create-user.dto";
+import { UpdateUserDto } from "../dto/update-user.dto";
+import { SearchUserDto } from "../dto/search-user.dto";
 
 
 const passwordUserTest = faker.internet.password();
 export const idUser = faker.number.int();
 
-export const userObjectTest = {
+export const paginationObjectTest: PaginationUserDto = {
+
+    page: faker.number.int({ min: 1, max: 100 }),
+    limit: faker.number.int({ min: 1, max: 100 }),
+    sortBy: "email",
+    order: "desc" as "asc" | "desc"
+}
+
+export const searchObjectTest: SearchUserDto = {
+    username: faker.internet.username(),
+    email: faker.internet.email(),
+}
+
+export const userObjectTest: CreateUserDto = {
 
     username: faker.internet.username(),
     email: faker.internet.email(),
@@ -15,7 +32,7 @@ export const userObjectTest = {
     isSuperuser: faker.datatype.boolean(),
 }
 
-export const userObjectTestUpdate = {
+export const userObjectTestUpdate: UpdateUserDto = {
     username: faker.internet.username(),
     email: faker.internet.email(),
     active: faker.datatype.boolean(),
@@ -36,6 +53,7 @@ export const mockUsersService = {
     })),
     findAll: jest.fn().mockResolvedValue([userObjectTest]),
     findOne: jest.fn().mockResolvedValue(userObjectTest),
+    search: jest.fn().mockResolvedValue([userObjectTest]),
     remove: jest.fn().mockImplementation(id => ({ message: `User ${id} removed` }))
 }
 

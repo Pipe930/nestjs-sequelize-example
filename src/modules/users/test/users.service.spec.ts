@@ -5,9 +5,12 @@ import { User } from '../models/user.model';
 import {
     idUser,
     mockUserModel,
+    paginationObjectTest,
+    searchObjectTest,
     userObjectTest,
     userObjectTestUpdate,
 } from './mock.users';
+import { Op } from 'sequelize';
 
 describe('UserService', () => {
     let service: UsersService;
@@ -42,11 +45,15 @@ describe('UserService', () => {
     });
 
     it('should return a list of users', async () => {
-        expect(await service.findAll()).toEqual([userObjectTest]);
+
+        expect(await service.findAll(paginationObjectTest)).toEqual([userObjectTest]);
 
         expect(mockUserModel.findAll).toHaveBeenCalledTimes(1);
         expect(mockUserModel.findAll).toHaveBeenCalledWith({
             attributes: { exclude: ['password'] },
+            order: [[paginationObjectTest.sortBy, paginationObjectTest.order]],
+            limit: paginationObjectTest.limit,
+            offset: ((paginationObjectTest.page ?? 1) - 1) * (paginationObjectTest.limit ?? 10),
         });
     });
 
@@ -60,6 +67,20 @@ describe('UserService', () => {
         });
     });
 
+    it('should return a list of users by search', async () => {
+
+        expect(await service.search(searchObjectTest)).toEqual([userObjectTest]);
+
+        expect(mockUserModel.findAll).toHaveBeenCalledTimes(1);
+        expect(mockUserModel.findAll).toHaveBeenCalledWith({
+            where: { 
+                username: { [Op.iLike]: `%${searchObjectTest.username}%` },
+                email: { [Op.iLike]: `%${searchObjectTest.email}%` },
+            },
+            attributes: { exclude: ['password'] }
+        });
+    });
+    
     it('should update a user', async () => {
         expect(await service.update(idUser, userObjectTestUpdate)).toEqual({
             statusCode: expect.any(Number),

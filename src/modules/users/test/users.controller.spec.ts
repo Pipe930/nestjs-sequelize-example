@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
-import { mockUsersService, userObjectTest, idUser } from './mock.users';
+import { mockUsersService, userObjectTest, idUser, paginationObjectTest, searchObjectTest } from './mock.users';
 
 describe("UsersController", () => {
 
@@ -28,7 +28,7 @@ describe("UsersController", () => {
 
     it("should findAll a user", async () => {
 
-        expect(await controller.findAll()).toEqual([userObjectTest]);
+        expect(await controller.findAll(paginationObjectTest)).toEqual([userObjectTest]);
 
         expect(mockUsersService.findAll).toHaveBeenCalled();
     });
@@ -38,6 +38,12 @@ describe("UsersController", () => {
         expect(await controller.findOne(idUser)).toEqual(userObjectTest);
 
         expect(mockUsersService.findOne).toHaveBeenCalledWith(idUser);
+    })
+
+    it("should search a user", async () => {
+        expect(await controller.search(searchObjectTest)).toEqual([userObjectTest]);
+
+        expect(mockUsersService.search).toHaveBeenCalled();
     })
 
     it("should create a user", async () => {

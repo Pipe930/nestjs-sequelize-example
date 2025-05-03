@@ -4,6 +4,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './models/user.model'; 
 import { InjectModel } from '@nestjs/sequelize';
 import { genSalt, hash } from 'bcryptjs';
+import { PaginationUserDto } from './dto/pagination-user.dto';
+import { SearchUserDto } from './dto/search-user.dto';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class UsersService {
@@ -42,12 +45,19 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(paginationUserDto: PaginationUserDto): Promise<User[]> {
+
+    const { page = 1, limit = 20, sortBy = 'idUser', order = 'asc' } = paginationUserDto;
+    
+    const offset = (page - 1) * limit;
 
     const users = await this.userModel.findAll<User>({
       attributes: {
         exclude: ["password"]
-      }
+      },
+      offset,
+      limit,
+      order: [[sortBy, order.toLocaleLowerCase()]]
     });
 
     return users;
@@ -67,6 +77,23 @@ export class UsersService {
     if(!user) throw new NotFoundException("Usuario no encontrado");
 
     return user;
+  }
+
+  async search(searchUserDto: SearchUserDto): Promise<User[]> {
+
+    const { username="", email="" } = searchUserDto;
+
+    const users = await this.userModel.findAll<User>({
+      where: {
+        username: { [Op.iLike]: `%${username}%` },
+        email: { [Op.iLike]: `%${email}%` } 
+      },
+      attributes: {
+        exclude: ["password"]
+      }
+    });
+
+    return users;
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
