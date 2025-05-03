@@ -45,16 +45,14 @@ export class AuthService {
     }
 
     async logout(id: number){
-
-        const refreshToken = await this.refreshTokenModel.findOne({
+        
+        const tokenDelete = await this.refreshTokenModel.destroy({
             where: {
                 idRefreshToken: id
             }
-        })
-
-        if(!refreshToken) throw new NotFoundException("Session no encontrada");
-
-        await refreshToken.destroy();
+        });
+        
+        if(tokenDelete === 0) throw new NotFoundException("Session no encontrada");
 
         return { message: "Session del usuaio cerrada con exito", statusCode: HttpStatus.OK }
     }
