@@ -4,6 +4,7 @@ import { SignInDto } from './dto/signin.dto';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
 import { Request } from 'express';
 import { AuthenticationGuard } from '../../core/guards/authentication.guard'; 
+import { RequestJwt } from '../../core/interfaces/request-jwt';
 
 @Controller('auth')
 export class AuthController {
@@ -29,7 +30,7 @@ export class AuthController {
 
   @UseGuards(AuthenticationGuard)
   @Get('me')
-  profile(@Req() request: Request){
-    return this.authService.userProfile(request["user"].userId);
+  profile(@Req() request: RequestJwt){
+    return this.authService.userProfile(request.user.userId);
   }
 }

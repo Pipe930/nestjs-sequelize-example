@@ -13,6 +13,7 @@ async function bootstrap() {
   app.enableCors(CORS);
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
+    forbidNonWhitelisted: true,
     transform: true
   }))
 

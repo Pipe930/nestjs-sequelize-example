@@ -18,8 +18,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
 
-    const password = createUserDto.password.trim();
-    const rePassword = createUserDto.rePassword.trim();
+    const { password, rePassword, username, email, active, isStaff, isSuperuser } = createUserDto;
 
     if(password !== rePassword) throw new BadRequestException("Las contraseñas no coinciden");
 
@@ -29,12 +28,12 @@ export class UsersService {
     try {
       await this.userModel.create({
 
-        username: createUserDto.username.trim(),
-        email: createUserDto.email,
+        username,
+        email,
         password: passwordHash,
-        active: createUserDto.active,
-        isStaff: createUserDto.isStaff,
-        isSuperuser: createUserDto.isSuperuser
+        active,
+        isStaff,
+        isSuperuser
       });
 
       return { message: "Usuario creado con exito", statusCode: HttpStatus.CREATED }
@@ -98,15 +97,17 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
 
+    const { username, email, active, isStaff, isSuperuser } = updateUserDto;
+
     let userUpdate: number;
     
     try {
       [userUpdate] = await this.userModel.update({
-        username: updateUserDto.username.trim(),
-        email: updateUserDto.email,
-        active: updateUserDto.active,
-        isStaff: updateUserDto.isStaff,
-        isSuperuser: updateUserDto.isSuperuser
+        username,
+        email,
+        active,
+        isStaff,
+        isSuperuser
       }, {
         where: {
           idUser: id
