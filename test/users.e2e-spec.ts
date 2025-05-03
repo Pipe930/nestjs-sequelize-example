@@ -34,9 +34,6 @@ describe('UsersController (e2e)', () => {
         }))
         await app.init();
 
-    });
-
-    afterEach(() => {
         jest.clearAllMocks();
     });
 
@@ -78,6 +75,15 @@ describe('UsersController (e2e)', () => {
         .expect('Content-Type', /json/)
         .expect([mockUsers]);
     });
+
+    it("/users/search (GET)", () => {
+
+        return request(app.getHttpServer())
+        .get('/users/search?username=test')
+        .expect(HttpStatus.OK)
+        .expect('Content-Type', /json/)
+        .expect(mockUsers)
+    })
 
     it('/users/:id (PUT)', () => {
         return request(app.getHttpServer())

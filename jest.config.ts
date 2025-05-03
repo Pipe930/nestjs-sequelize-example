@@ -1,7 +1,4 @@
 export default {
-    moduleNameMapper: {
-        '^@core/(.*)$': '<rootDir>/src/core/$1',
-    },
     moduleFileExtensions: [
         "js",
         "json",

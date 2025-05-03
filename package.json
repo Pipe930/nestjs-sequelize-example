@@ -8,7 +8,18 @@
   "keywords": [
     "javascript",
     "typescript",
-    "testing"
+    "testing",
+    "nest",
+    "nestjs",
+    "sequelize",
+    "sequelize-typescript",
+    "orm",
+    "nodejs",
+    "node",
+    "jwt",
+    "jsonwebtoken",
+    "swagger",
+    "jest"
   ],
   "repository": {
     "type": "git",
@@ -19,9 +30,6 @@
     "npm": ">=11.3.0"
   },
   "homepage": "https://github.com/Pipe930/nestjs-sequelize-example.git#readme",
-  "bugs": {
-    "url": "https://github.com/Pipe930/nestjs-sequelize-example/issues"
-  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
