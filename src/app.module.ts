@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppConfigEnvironment } from './config/enviroment.config';
 import { UsersModule } from './modules/users/users.module';
@@ -8,6 +8,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './modules/users/models/user.model'; 
 import { RefreshToken } from './modules/users/models/tokenJwt.model';
+import { PostsModule } from './modules/posts/posts.module';
+import { ContentTypeMiddleware } from './core/middlewares/content-type.middleware';
 
 @Module({
   imports: [
@@ -34,7 +36,8 @@ import { RefreshToken } from './modules/users/models/tokenJwt.model';
     }),
     MorganModule,
     UsersModule,
-    AuthModule
+    AuthModule,
+    PostsModule
   ],
   providers: [
     {
@@ -43,4 +46,18 @@ import { RefreshToken } from './modules/users/models/tokenJwt.model';
     }
   ]
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ContentTypeMiddleware).forRoutes(
+      {
+        path: '*',
+        method: RequestMethod.POST
+      }, 
+      {
+        path: '*',
+        method: RequestMethod.PUT
+      }
+    );
+  }
+}

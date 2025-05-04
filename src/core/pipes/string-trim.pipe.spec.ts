@@ -5,13 +5,13 @@ describe('StringTrimPipe', () => {
   let pipe: StringTrimPipe;
 
   const input = {
-    name: '  John   Doe  ',
+    name: '  John Doe  ',
     age: 30,
     email: '   john@example.com   ',
   }
 
   const expected = {
-    name: 'JohnDoe',
+    name: 'John Doe',
     age: 30,
     email: 'john@example.com',
   }

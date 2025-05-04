@@ -10,16 +10,12 @@ export class StringTrimPipe implements PipeTransform {
         return value;
     }
 
-    private cleanString(str: string): string {
-        return str.trim().replace(/\s+/g, '');
-    }
-
     private trimObject(obj: Record<string, any>) {
         const trimmed: Record<string, any> = {};
 
         for (const key in obj) {
             if (typeof obj[key] === 'string') {
-                trimmed[key] = this.cleanString(obj[key]);
+                trimmed[key] = obj[key].trim();
             } else {
                 trimmed[key] = obj[key];
             }

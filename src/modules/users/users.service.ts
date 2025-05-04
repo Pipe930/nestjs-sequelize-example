@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './models/user.model'; 
 import { InjectModel } from '@nestjs/sequelize';
 import { genSalt, hash } from 'bcryptjs';
-import { PaginationUserDto } from './dto/pagination-user.dto';
+import { PaginationDto } from './dto/pagination.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { Op } from 'sequelize';
 
@@ -44,7 +44,7 @@ export class UsersService {
     }
   }
 
-  async findAll(paginationUserDto: PaginationUserDto): Promise<User[]> {
+  async findAll(paginationUserDto: PaginationDto): Promise<any> {
 
     const { page = 1, limit = 20, sortBy = 'idUser', order = 'asc' } = paginationUserDto;
     
@@ -59,7 +59,16 @@ export class UsersService {
       order: [[sortBy, order.toLocaleLowerCase()]]
     });
 
-    return users;
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(await this.userModel.count() / limit);
+
+    return {
+      statusCode: HttpStatus.OK,
+      data: users,
+      count: users.length,
+      currentPage,
+      totalPages
+    };
   }
 
   async findOne(id: number): Promise<User> {
@@ -78,7 +87,7 @@ export class UsersService {
     return user;
   }
 
-  async search(searchUserDto: SearchUserDto): Promise<User[]> {
+  async searchUser(searchUserDto: SearchUserDto): Promise<User[]> {
 
     const { username="", email="" } = searchUserDto;
 

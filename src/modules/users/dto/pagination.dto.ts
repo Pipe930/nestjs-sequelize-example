@@ -2,7 +2,7 @@ import { Transform } from "class-transformer";
 import { IsIn, IsNumber, IsOptional, Min } from "class-validator";
 
 
-export class PaginationUserDto {
+export class PaginationDto {
 
     @Transform(({value}) => parseInt(value))
     @IsNumber()
@@ -21,5 +21,5 @@ export class PaginationUserDto {
 
     @IsOptional()
     @IsIn(["asc", "desc"])
-    readonly order: "asc" | "desc";
+    readonly order?: "asc" | "desc";
 }

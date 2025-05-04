@@ -27,7 +27,7 @@ export class AuthService {
 
         if(!user) throw new BadRequestException("Usuario no encontrado con ese correo");
 
-        const passwordValid = await compare(password, user.dataValues.password);
+        const passwordValid = await compare(password, user.password);
 
         if(!passwordValid) throw new BadRequestException("Credenciales invalidas");
 
@@ -67,7 +67,7 @@ export class AuthService {
 
         if(!refreshTokenFind) throw new NotFoundException("refresh token no encontrado");
 
-        const user = await this.userService.findOne(refreshTokenFind.dataValues.idRefreshToken);
+        const user = await this.userService.findOne(refreshTokenFind.idRefreshToken);
 
         const { accessToken, refreshToken } = await this.generateTokenJWT(user);
 
@@ -91,11 +91,11 @@ export class AuthService {
 
         try {
 
-            const payload = { userId: user.dataValues.idUser, username: user.dataValues.username };
+            const payload = { userId: user.idUser, username: user.username };
             const accessToken = await this.jwtService.signAsync(payload);
             const refreshToken = await this.jwtService.signAsync(payload, { expiresIn: "1d" });
 
-            await this.storeRefreshToken(refreshToken, user.dataValues.idUser);
+            await this.storeRefreshToken(refreshToken, user.idUser);
 
             return {
                 accessToken,

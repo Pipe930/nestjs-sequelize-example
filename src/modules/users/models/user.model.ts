@@ -1,11 +1,9 @@
-import { Column, DataType, HasOne, Model, Table } from "sequelize-typescript";
+import { Column, CreatedAt, DataType, DeletedAt, HasOne, Model, Table, UpdatedAt } from "sequelize-typescript";
 import { RefreshToken } from "./tokenJwt.model";
 
 @Table({
     tableName: "users",
-    modelName: "User",
-    timestamps: true,
-    paranoid: true
+    modelName: "User"
 })
 export class User extends Model {
 
@@ -15,7 +13,7 @@ export class User extends Model {
         type: DataType.BIGINT,
         field: "id_user"
     })
-    idUser: number;
+    declare idUser: number;
 
     @Column({
         type: DataType.STRING(60),
@@ -25,7 +23,7 @@ export class User extends Model {
             len: [3, 60]
         }
     })
-    username: string;
+    declare username: string;
 
     @Column({
         type: DataType.STRING(255),
@@ -36,13 +34,13 @@ export class User extends Model {
             len: [4, 255]
         }
     })
-    email: string;
+    declare email: string;
 
     @Column({
         type: DataType.STRING(128),
         allowNull: false
     })
-    password: string;
+    declare password: string;
 
     @Column({
         type: DataType.DATE,
@@ -52,14 +50,14 @@ export class User extends Model {
         },
         field: "last_login"
     })
-    lastLogin: Date;
+    declare lastLogin: Date;
 
     @Column({
         type: DataType.BOOLEAN,
         allowNull: false,
         defaultValue: false
     })
-    active: boolean;
+    declare active: boolean;
 
     @Column({
         type: DataType.BOOLEAN,
@@ -67,7 +65,7 @@ export class User extends Model {
         defaultValue: false,
         field: "is_staff"
     })
-    isStaff: boolean;
+    declare isStaff: boolean;
 
     @Column({
         type: DataType.BOOLEAN,
@@ -75,8 +73,20 @@ export class User extends Model {
         defaultValue: false,
         field: "is_superuser"
     })
-    isSuperuser: boolean;
+    declare isSuperuser: boolean;
+
+    @CreatedAt
+    @Column({ field: "created_at" })
+    declare createdAt: Date;
+
+    @UpdatedAt
+    @Column({ field: "updated_at" })
+    declare updatedAt: Date;
+
+    @DeletedAt
+    @Column({ field: "deleted_at" })
+    declare deletedAt: Date;
 
     @HasOne(() => RefreshToken)
-    refreshToken: RefreshToken;
+    declare refreshToken: RefreshToken;
 }

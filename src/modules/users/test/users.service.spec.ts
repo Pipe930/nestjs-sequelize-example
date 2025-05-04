@@ -11,6 +11,7 @@ import {
     userObjectTestUpdate,
 } from './mock.users';
 import { Op } from 'sequelize';
+import { HttpStatus } from '@nestjs/common';
 
 describe('UserService', () => {
     let service: UsersService;
@@ -38,7 +39,7 @@ describe('UserService', () => {
     it('should create a new user record and return that', async () => {
         expect(await service.create({ ...userObjectTest })).toEqual({
             message: expect.any(String),
-            statusCode: expect.any(Number),
+            statusCode: HttpStatus.CREATED,
         });
 
         expect(mockUserModel.create).toHaveBeenCalledTimes(1);
@@ -46,7 +47,13 @@ describe('UserService', () => {
 
     it('should return a list of users', async () => {
 
-        expect(await service.findAll(paginationObjectTest)).toEqual([userObjectTest]);
+        expect(await service.findAll(paginationObjectTest)).toEqual({
+            statusCode: HttpStatus.OK,
+            data: [userObjectTest],
+            count: expect.any(Number),
+            currentPage: expect.any(Number),
+            totalPages: expect.any(Number),
+        });
 
         expect(mockUserModel.findAll).toHaveBeenCalledTimes(1);
         expect(mockUserModel.findAll).toHaveBeenCalledWith({
@@ -69,7 +76,7 @@ describe('UserService', () => {
 
     it('should return a list of users by search', async () => {
 
-        expect(await service.search(searchObjectTest)).toEqual([userObjectTest]);
+        expect(await service.searchUser(searchObjectTest)).toEqual([userObjectTest]);
 
         expect(mockUserModel.findAll).toHaveBeenCalledTimes(1);
         expect(mockUserModel.findAll).toHaveBeenCalledWith({
@@ -83,7 +90,7 @@ describe('UserService', () => {
     
     it('should update a user', async () => {
         expect(await service.update(idUser, userObjectTestUpdate)).toEqual({
-            statusCode: expect.any(Number),
+            statusCode: HttpStatus.OK,
             message: expect.any(String),
         });
 
@@ -100,7 +107,7 @@ describe('UserService', () => {
 
     it('should delete a user', async () => {
         expect(await service.remove(idUser)).toEqual({
-            statusCode: expect.any(Number),
+            statusCode: HttpStatus.NO_CONTENT,
             message: expect.any(String),
         });
 

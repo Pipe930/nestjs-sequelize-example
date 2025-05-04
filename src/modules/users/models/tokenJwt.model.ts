@@ -15,19 +15,19 @@ export class RefreshToken extends Model {
         autoIncrement: true,
         field: "id_refresh_token"
     })
-    idRefreshToken: number;
+    declare idRefreshToken: number;
 
     @Column({
         type: DataType.STRING(300),
         allowNull: false,
         unique: true
     })
-    token: string;
+    declare token: string;
 
     @Column({
         type: DataType.DATE,
         allowNull: false,
         field: "expiry_date"
     })
-    expiryDate: Date;
+    declare expiryDate: Date;
 }

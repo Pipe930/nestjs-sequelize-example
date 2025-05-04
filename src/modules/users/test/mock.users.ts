@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { PaginationUserDto } from "../dto/pagination-user.dto";
+import { PaginationDto } from "../dto/pagination.dto";
 import { CreateUserDto } from "../dto/create-user.dto";
 import { UpdateUserDto } from "../dto/update-user.dto";
 import { SearchUserDto } from "../dto/search-user.dto";
@@ -8,7 +8,7 @@ import { SearchUserDto } from "../dto/search-user.dto";
 const passwordUserTest = faker.internet.password();
 export const idUser = faker.number.int();
 
-export const paginationObjectTest: PaginationUserDto = {
+export const paginationObjectTest: PaginationDto = {
 
     page: faker.number.int({ min: 1, max: 100 }),
     limit: faker.number.int({ min: 1, max: 100 }),
@@ -53,7 +53,7 @@ export const mockUsersService = {
     })),
     findAll: jest.fn().mockResolvedValue([userObjectTest]),
     findOne: jest.fn().mockResolvedValue(userObjectTest),
-    search: jest.fn().mockResolvedValue([userObjectTest]),
+    searchUser: jest.fn().mockResolvedValue([userObjectTest]),
     remove: jest.fn().mockImplementation(id => ({ message: `User ${id} removed` }))
 }
 
@@ -63,5 +63,6 @@ export const mockUserModel = {
     update: jest.fn().mockReturnValue([1]),
     findAll: jest.fn().mockResolvedValue([userObjectTest]),
     findOne: jest.fn().mockResolvedValue(userObjectTest),
-    destroy: jest.fn().mockResolvedValue(1)
+    destroy: jest.fn().mockResolvedValue(1),
+    count: jest.fn()
 }

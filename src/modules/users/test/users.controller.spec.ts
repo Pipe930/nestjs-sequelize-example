@@ -43,7 +43,7 @@ describe("UsersController", () => {
     it("should search a user", async () => {
         expect(await controller.search(searchObjectTest)).toEqual([userObjectTest]);
 
-        expect(mockUsersService.search).toHaveBeenCalled();
+        expect(mockUsersService.searchUser).toHaveBeenCalled();
     })
 
     it("should create a user", async () => {

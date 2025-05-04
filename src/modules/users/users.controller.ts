@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Put, Query } 
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginationUserDto } from './dto/pagination-user.dto';
+import { PaginationDto } from './dto/pagination.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { StringTrimPipe } from '../../core/pipes/string-trim.pipe';
 
@@ -16,13 +16,13 @@ export class UsersController {
   }
 
   @Get()
-  findAll(@Query() paginationUserDto: PaginationUserDto) {
+  findAll(@Query() paginationUserDto: PaginationDto) {
     return this.usersService.findAll(paginationUserDto);
   }
 
   @Get('search')
   search(@Query() searchUserDto: SearchUserDto) {
-    return this.usersService.search(searchUserDto);
+    return this.usersService.searchUser(searchUserDto);
   }
 
   @Get(':id')
