@@ -7,18 +7,31 @@ import { User } from '../users/models/user.model';
 import { PaginationDto } from '../users/dto/pagination.dto';
 import { SearchPostDto } from './dto/search-post.dto';
 import { Op } from 'sequelize';
+import { ResponseData, ResponsePagination } from '../../core/interfaces/response-data';
 
 @Injectable()
 export class PostsService {
+
+  private readonly configModel = {
+    include: {
+      model: User,
+      attributes: ['idUser', 'username', 'email']
+    },
+    attributes: {
+      exclude: ['idUser']
+    }
+  }
 
   constructor(
     @InjectModel(Post)
     private readonly postModel: typeof Post
   ){}
 
-  async create(createPostDto: CreatePostDto) {
+  async create(createPostDto: CreatePostDto): Promise<ResponseData> {
 
     const { title, subtitle, content, published, views, likes, dislikes, idUser } = createPostDto;
+
+    const slug = this.generateSlug(title);
 
     try {
 
@@ -26,7 +39,7 @@ export class PostsService {
         title,
         subtitle,
         content,
-        slug: this.generateSlug(title),
+        slug,
         published,
         views,
         likes,
@@ -47,20 +60,14 @@ export class PostsService {
     }
   }
 
-  async findAll(paginationDto: PaginationDto): Promise<any> {
+  async findAll(paginationDto: PaginationDto): Promise<ResponsePagination> {
 
     const { page = 1, limit = 20, sortBy = 'idPost', order = 'asc' } = paginationDto;
 
     const offset = (page - 1) * limit;
 
     const posts = await this.postModel.findAll<Post>({
-      include: {
-        model: User,
-        attributes: ['idUser', 'username', 'email']
-      },
-      attributes: {
-        exclude: ['idUser']
-      },
+      ...this.configModel,
       order: [[sortBy, order]],
       offset,
       limit
@@ -84,13 +91,7 @@ export class PostsService {
       where: {
         idPost: id
       },
-      include: {
-        model: User,
-        attributes: ['idUser', 'username', 'email']
-      },
-      attributes: {
-        exclude: ['idUser']
-      }
+      ...this.configModel
     })
 
     if (!post) throw new NotFoundException("Post no encontrado");
@@ -107,19 +108,13 @@ export class PostsService {
         title: { [Op.iLike]: `%${title}%` },
         subtitle: { [Op.iLike]: `%${subtitle}%` } 
       },
-      include: {
-        model: User,
-        attributes: ['idUser', 'username', 'email']
-      },
-      attributes: {
-        exclude: ['idUser']
-      }
+      ...this.configModel
     })
 
     return posts;
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto) {
+  async update(id: number, updatePostDto: UpdatePostDto): Promise<ResponseData> {
 
     const { title, subtitle, content, published, views, likes, dislikes, idUser } = updatePostDto;
 
@@ -158,7 +153,7 @@ export class PostsService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<ResponseData> {
 
     const deletePost = await this.postModel.destroy({
       where: {
@@ -174,7 +169,7 @@ export class PostsService {
     }
   }
 
-  private generateSlug(title: string) {
+  private generateSlug(title: string): string {
     return title.toLowerCase().replace(/ /g, '-');
   }
 }

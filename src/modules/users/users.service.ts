@@ -7,6 +7,7 @@ import { genSalt, hash } from 'bcryptjs';
 import { PaginationDto } from './dto/pagination.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { Op } from 'sequelize';
+import { ResponseData, ResponsePagination } from '../../core/interfaces/response-data';
 
 @Injectable()
 export class UsersService {
@@ -16,7 +17,7 @@ export class UsersService {
     private readonly userModel: typeof User
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<ResponseData> {
 
     const { password, rePassword, username, email, active, isStaff, isSuperuser } = createUserDto;
 
@@ -35,7 +36,7 @@ export class UsersService {
         isStaff,
         isSuperuser
       });
-
+      
       return { message: "Usuario creado con exito", statusCode: HttpStatus.CREATED }
     } catch (error) {
 
@@ -44,7 +45,7 @@ export class UsersService {
     }
   }
 
-  async findAll(paginationUserDto: PaginationDto): Promise<any> {
+  async findAll(paginationUserDto: PaginationDto): Promise<ResponsePagination> {
 
     const { page = 1, limit = 20, sortBy = 'idUser', order = 'asc' } = paginationUserDto;
     
@@ -104,7 +105,7 @@ export class UsersService {
     return users;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<ResponseData> {
 
     const { username, email, active, isStaff, isSuperuser } = updateUserDto;
 
@@ -133,7 +134,7 @@ export class UsersService {
     return { message: "Usuario actualizado correctamente", statusCode: HttpStatus.OK }
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<ResponseData> {
 
     const userDelete = await this.userModel.destroy({
       where: {

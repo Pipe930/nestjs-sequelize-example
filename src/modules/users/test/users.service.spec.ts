@@ -5,13 +5,14 @@ import { User } from '../models/user.model';
 import {
     idUser,
     mockUserModel,
-    paginationObjectTest,
-    searchObjectTest,
-    userObjectTest,
-    userObjectTestUpdate,
+    paginationTest,
+    searchTest,
+    userTest,
+    userTestUpdate,
 } from './mock.users';
 import { Op } from 'sequelize';
 import { HttpStatus } from '@nestjs/common';
+import * as bcrypt from 'bcryptjs';
 
 describe('UserService', () => {
     let service: UsersService;
@@ -37,19 +38,23 @@ describe('UserService', () => {
     });
 
     it('should create a new user record and return that', async () => {
-        expect(await service.create({ ...userObjectTest })).toEqual({
+
+        jest.spyOn(bcrypt, "hash").mockResolvedValue("passwordHash" as never);
+
+        expect(await service.create(userTest)).toEqual({
             message: expect.any(String),
             statusCode: HttpStatus.CREATED,
         });
 
+        expect(bcrypt.hash).toHaveBeenCalledTimes(1);
         expect(mockUserModel.create).toHaveBeenCalledTimes(1);
     });
 
     it('should return a list of users', async () => {
 
-        expect(await service.findAll(paginationObjectTest)).toEqual({
+        expect(await service.findAll(paginationTest)).toEqual({
             statusCode: HttpStatus.OK,
-            data: [userObjectTest],
+            data: [userTest],
             count: expect.any(Number),
             currentPage: expect.any(Number),
             totalPages: expect.any(Number),
@@ -58,14 +63,14 @@ describe('UserService', () => {
         expect(mockUserModel.findAll).toHaveBeenCalledTimes(1);
         expect(mockUserModel.findAll).toHaveBeenCalledWith({
             attributes: { exclude: ['password'] },
-            order: [[paginationObjectTest.sortBy, paginationObjectTest.order]],
-            limit: paginationObjectTest.limit,
-            offset: ((paginationObjectTest.page ?? 1) - 1) * (paginationObjectTest.limit ?? 10),
+            order: [[paginationTest.sortBy, paginationTest.order]],
+            limit: paginationTest.limit,
+            offset: ((paginationTest.page ?? 1) - 1) * (paginationTest.limit ?? 10),
         });
     });
 
     it('should return a user by id', async () => {
-        expect(await service.findOne(idUser)).toEqual(userObjectTest);
+        expect(await service.findOne(idUser)).toEqual(userTest);
 
         expect(mockUserModel.findOne).toHaveBeenCalledTimes(1);
         expect(mockUserModel.findOne).toHaveBeenCalledWith({
@@ -76,20 +81,20 @@ describe('UserService', () => {
 
     it('should return a list of users by search', async () => {
 
-        expect(await service.searchUser(searchObjectTest)).toEqual([userObjectTest]);
+        expect(await service.searchUser(searchTest)).toEqual([userTest]);
 
         expect(mockUserModel.findAll).toHaveBeenCalledTimes(1);
         expect(mockUserModel.findAll).toHaveBeenCalledWith({
             where: { 
-                username: { [Op.iLike]: `%${searchObjectTest.username}%` },
-                email: { [Op.iLike]: `%${searchObjectTest.email}%` },
+                username: { [Op.iLike]: `%${searchTest.username}%` },
+                email: { [Op.iLike]: `%${searchTest.email}%` },
             },
             attributes: { exclude: ['password'] }
         });
     });
     
     it('should update a user', async () => {
-        expect(await service.update(idUser, userObjectTestUpdate)).toEqual({
+        expect(await service.update(idUser, userTestUpdate)).toEqual({
             statusCode: HttpStatus.OK,
             message: expect.any(String),
         });
@@ -97,7 +102,7 @@ describe('UserService', () => {
         expect(mockUserModel.update).toHaveBeenCalledTimes(1);
         expect(mockUserModel.update).toHaveBeenCalledWith(
             {
-                ...userObjectTestUpdate,
+                ...userTestUpdate,
             },
             {
                 where: { idUser },
