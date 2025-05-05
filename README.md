@@ -71,7 +71,7 @@ That's it! If everything went well, the project is now running locally on your c
 
 ## Testing
 
-Unit tests and e2e tests were developed and implemented for each application feature, including testing services, pipes, middleware, guards, and controllers. Tests were also implemented for pipes, guards, and middleware. To verify the functionality of the endpoint and to ensure that there are no modifications causing errors in other functionalities of the API. To run the tests, you need to enter the following command:
+Unit tests and e2e tests were developed and implemented for each application feature. To verify the functionality of the endpoint and to ensure that there are no modifications causing errors in other functionalities of the API. To run the tests, you need to enter the following command:
 
 ```bash
 # unit tests
