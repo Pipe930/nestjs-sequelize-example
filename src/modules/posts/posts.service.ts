@@ -7,7 +7,7 @@ import { User } from '../users/models/user.model';
 import { PaginationDto } from '../users/dto/pagination.dto';
 import { SearchPostDto } from './dto/search-post.dto';
 import { Op } from 'sequelize';
-import { ResponseData, ResponsePagination } from '../../core/interfaces/response-data';
+import { ResponseData, ResponsePagination } from '@core/interfaces/response-data';
 
 @Injectable()
 export class PostsService {

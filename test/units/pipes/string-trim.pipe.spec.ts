@@ -1,4 +1,4 @@
-import { StringTrimPipe } from './string-trim.pipe';
+import { StringTrimPipe } from '@core/pipes/string-trim.pipe';
 
 describe('StringTrimPipe', () => {
 

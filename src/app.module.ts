@@ -1,15 +1,15 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppConfigEnvironment } from './config/enviroment.config';
-import { UsersModule } from './modules/users/users.module';
+import { AppConfigEnvironment } from '@config/enviroment.config';
+import { UsersModule } from '@modules/users/users.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { MorganInterceptor, MorganModule } from 'nest-morgan';
-import { AuthModule } from './modules/auth/auth.module';
+import { AuthModule } from '@modules/auth/auth.module';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from './modules/users/models/user.model'; 
-import { RefreshToken } from './modules/users/models/tokenJwt.model';
-import { PostsModule } from './modules/posts/posts.module';
-import { ContentTypeMiddleware } from './core/middlewares/content-type.middleware';
+import { User } from '@modules/users/models/user.model'; 
+import { RefreshToken } from '@modules/users/models/tokenJwt.model';
+import { PostsModule } from '@modules/posts/posts.module';
+import { ContentTypeMiddleware } from '@core/middlewares/content-type.middleware';
 
 @Module({
   imports: [

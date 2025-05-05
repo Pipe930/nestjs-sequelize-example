@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { PostsService } from '../posts.service';
+import { PostsService } from '@modules/posts/posts.service';
 import { getModelToken } from '@nestjs/sequelize';
-import { Post } from '../models/post.model';
+import { Post } from '@modules/posts/models/post.model';
 import { configModel, idPost, mockPostModel, paginationTest, postTest } from './mock.post';
 import { HttpStatus } from '@nestjs/common';
 import { Op } from 'sequelize';

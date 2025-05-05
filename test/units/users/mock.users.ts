@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
-import { PaginationDto } from '../dto/pagination.dto';
-import { CreateUserDto } from '../dto/create-user.dto';
-import { UpdateUserDto } from '../dto/update-user.dto';
-import { SearchUserDto } from '../dto/search-user.dto';
+import { PaginationDto } from '@modules/users/dto/pagination.dto';
+import { CreateUserDto } from '@modules/users/dto/create-user.dto';
+import { UpdateUserDto } from '@modules/users/dto/update-user.dto';
+import { SearchUserDto } from '@modules/users/dto/search-user.dto';
 
 const passwordUserTest = faker.internet.password();
 export const idUser = faker.number.int();

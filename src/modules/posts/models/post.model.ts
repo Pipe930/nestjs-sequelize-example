@@ -1,5 +1,5 @@
 import { BelongsTo, Column, CreatedAt, DataType, DeletedAt, ForeignKey, Model, Table, UpdatedAt } from "sequelize-typescript";
-import { User } from "../../users/models/user.model";
+import { User } from "@modules/users/models/user.model";
 
 @Table({
     tableName: "posts",

@@ -1,11 +1,16 @@
 export default {
+    moduleNameMapper: {
+        '^@core/(.*)$': '<rootDir>/src/core/$1',
+        '^@config/(.*)$': '<rootDir>/src/config/$1',
+        '^@modules/(.*)$': '<rootDir>/src/modules/$1',
+    },
     moduleFileExtensions: [
         "js",
         "json",
         "ts"
     ],
-    rootDir: "src",
-    testRegex: ".*\\.spec\\.ts$",
+    rootDir: ".",
+    testRegex: "test/units/.*\\.spec\\.ts$",
     transform: {
         "^.+\\.(t|j)s$": "ts-jest"
     },
@@ -13,5 +18,5 @@ export default {
         "**/*.(t|j)s"
     ],
     coverageDirectory: "../coverage",
-    testEnvironment: "node"
+    testEnvironment: "node",
 };

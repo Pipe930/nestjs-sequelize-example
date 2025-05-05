@@ -7,7 +7,7 @@ import { genSalt, hash } from 'bcryptjs';
 import { PaginationDto } from './dto/pagination.dto';
 import { SearchUserDto } from './dto/search-user.dto';
 import { Op } from 'sequelize';
-import { ResponseData, ResponsePagination } from '../../core/interfaces/response-data';
+import { ResponseData, ResponsePagination } from '@core/interfaces/response-data';
 
 @Injectable()
 export class UsersService {

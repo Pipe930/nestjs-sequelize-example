@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
-import { CreatePostDto } from '../dto/create-post.dto';
-import { PaginationDto } from '../../users/dto/pagination.dto';
-import { User } from '../../users/models/user.model';
+import { CreatePostDto } from '@modules/posts/dto/create-post.dto';
+import { PaginationDto } from '@modules/users/dto/pagination.dto';
+import { User } from '@modules/users/models/user.model';
 
 export const idPost = faker.number.int();
 

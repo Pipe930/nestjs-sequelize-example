@@ -4,7 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from './dto/pagination.dto';
 import { SearchUserDto } from './dto/search-user.dto';
-import { StringTrimPipe } from '../../core/pipes/string-trim.pipe';
+import { StringTrimPipe } from '@core/pipes/string-trim.pipe';
 
 @Controller('users')
 export class UsersController {

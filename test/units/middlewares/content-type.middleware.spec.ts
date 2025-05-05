@@ -1,5 +1,5 @@
 import { UnsupportedMediaTypeException } from '@nestjs/common';
-import { ContentTypeMiddleware } from './content-type.middleware';
+import { ContentTypeMiddleware } from '@core/middlewares/content-type.middleware';
 
 describe('ContentTypeMiddleware', () => {
 

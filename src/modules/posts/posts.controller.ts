@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Delete, Put, ParseIntPipe, Query } 
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { StringTrimPipe } from '../../core/pipes/string-trim.pipe';
+import { StringTrimPipe } from '@core/pipes/string-trim.pipe';
 import { PaginationDto } from '../users/dto/pagination.dto';
 import { SearchPostDto } from './dto/search-post.dto';
 

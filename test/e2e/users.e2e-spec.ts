@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { App } from 'supertest/types';
-import { UsersModule } from '../src/modules/users/users.module';
+import { UsersModule } from '@modules/users/users.module';
 import { getModelToken } from '@nestjs/sequelize';
-import { User } from '../src/modules/users/models/user.model';
-import { userObjectTest, userObjectTestUpdate } from '../src/modules/users/test/mock.users';
+import { User } from '@modules/users/models/user.model';
+import { userTest, userTestUpdate } from '../units/users/mock.users';
 import { mockUserFailed, mockUsers } from './test-data';
 
 describe('UsersController (e2e)', () => {
@@ -42,13 +42,19 @@ describe('UsersController (e2e)', () => {
         .get('/users')
         .expect(HttpStatus.OK)
         .expect('Content-Type', /json/)
-        .expect(mockUsers);
+        .expect({
+            statusCode: HttpStatus.OK,
+            data: [mockUsers],
+            count: expect.any(Number),
+            totalPages: expect.any(Number),
+            currentPage: expect.any(Number)
+        });
     });
 
     it('/users (POST)', () => {
         return request(app.getHttpServer())
         .post('/users')
-        .send(userObjectTest)
+        .send(userTest)
         .expect(HttpStatus.CREATED)
         .expect('Content-Type', /json/)
         .then(response => {
@@ -88,7 +94,7 @@ describe('UsersController (e2e)', () => {
     it('/users/:id (PUT)', () => {
         return request(app.getHttpServer())
         .put('/users/1')
-        .send(userObjectTestUpdate)
+        .send(userTestUpdate)
         .expect(HttpStatus.OK)
         .expect('Content-Type', /json/)
         .then(response => {

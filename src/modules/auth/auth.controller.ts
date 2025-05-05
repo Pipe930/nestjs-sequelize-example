@@ -2,9 +2,8 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } fro
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signin.dto';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
-import { Request } from 'express';
-import { AuthenticationGuard } from '../../core/guards/authentication.guard'; 
-import { RequestJwt } from '../../core/interfaces/request-jwt';
+import { AuthenticationGuard } from '@core/guards/authentication.guard'; 
+import { RequestJwt } from '@core/interfaces/request-jwt';
 
 @Controller('auth')
 export class AuthController {
@@ -18,8 +17,8 @@ export class AuthController {
 
   @UseGuards(AuthenticationGuard)
   @Get('logout')
-  logout(@Req() request: Request){
-    return this.authService.logout(request["user"].userId);
+  logout(@Req() request: RequestJwt){
+    return this.authService.logout(request.user.userId);
   }
 
   @HttpCode(HttpStatus.OK)
