@@ -4,9 +4,11 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { RefreshToken } from '../users/models/tokenJwt.model'; 
 import { User } from '../users/models/user.model'; 
-import { RefreshTokenDto } from './dto/refreshToken.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { compare } from 'bcryptjs';
+import { Response } from 'express';
+import { RequestJwt } from '@core/interfaces/request-jwt';
+import { ResponseData } from '@core/interfaces/response-data';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +21,7 @@ export class AuthService {
 
     ){}
 
-    async singIn(signInDto: SignInDto){
+    async singIn(signInDto: SignInDto, response: Response): Promise<ResponseData> {
 
         const { email, password } = signInDto;
 
@@ -41,10 +43,24 @@ export class AuthService {
             }
         });
 
-        return { statusCode: HttpStatus.OK, message: "Usuario logeado con exito", accessToken, refreshToken }
+        response.cookie("access_token", accessToken, {
+            secure: false,
+            httpOnly: true,
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60
+        });
+
+        response.cookie("refresh_token", refreshToken, {
+            secure: false,
+            httpOnly: true,
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60 * 24
+        });
+
+        return { statusCode: HttpStatus.OK, message: "Usuario logeado con exito" }
     }
 
-    async logout(id: number){
+    async logout(id: number, response: Response){
         
         const tokenDelete = await this.refreshTokenModel.destroy({
             where: {
@@ -54,14 +70,17 @@ export class AuthService {
         
         if(tokenDelete === 0) throw new NotFoundException("Session no encontrada");
 
-        return { message: "Session del usuaio cerrada con exito", statusCode: HttpStatus.OK }
+        response.clearCookie("access_token");
+        response.clearCookie("refresh_token");
+
+        return { message: "Session del usuario cerrada con exito", statusCode: HttpStatus.OK }
     }
 
-    async refreshToken(refreshTokenDto: RefreshTokenDto) {
+    async refreshToken(request: RequestJwt, response: Response): Promise<ResponseData> {
 
         const refreshTokenFind = await this.refreshTokenModel.findOne({
             where: {
-                token: refreshTokenDto.refreshToken
+                token: request.cookies["refresh_token"]
             }
         })
 
@@ -71,10 +90,21 @@ export class AuthService {
 
         const { accessToken, refreshToken } = await this.generateTokenJWT(user);
 
-        return {
-            accessToken,
-            refreshToken
-        }
+        response.cookie("access_token", accessToken, {
+            secure: false,
+            httpOnly: true,
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60
+        });
+
+        response.cookie("refresh_token", refreshToken, {
+            secure: false,
+            httpOnly: true,
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60 * 24
+        });
+
+        return { message: "Token actualizado con exito", statusCode: HttpStatus.OK }
     }
 
     async userProfile(id: number){

@@ -13,8 +13,8 @@ export class AuthenticationGuard implements CanActivate {
     context: ExecutionContext,
   ): Promise<boolean> {
 
-    const request = context.switchToHttp().getRequest();
-    const token = this.extractTokenFromHeader(request);
+    const request: Request = context.switchToHttp().getRequest();
+    const token = request.cookies["access_token"];
 
     if(!token) throw new UnauthorizedException("Token no provisto en la peticion");
 
@@ -28,10 +28,5 @@ export class AuthenticationGuard implements CanActivate {
     }
 
     return true;
-  }
-
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
-    return type === 'Bearer' ? token : undefined;
   }
 }
