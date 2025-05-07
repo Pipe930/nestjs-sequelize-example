@@ -33,7 +33,7 @@ export class AuthService {
 
         if(!passwordValid) throw new BadRequestException("Credenciales invalidas");
 
-        const { accessToken, refreshToken } = await this.generateTokenJWT(user);
+        await this.generateTokenJWT(user, response);
 
         await user.update({
             lastLogin: new Date()
@@ -41,20 +41,6 @@ export class AuthService {
             where:{
                 idUser: user.idUser
             }
-        });
-
-        response.cookie("access_token", accessToken, {
-            secure: false,
-            httpOnly: true,
-            sameSite: "lax",
-            maxAge: 1000 * 60 * 60
-        });
-
-        response.cookie("refresh_token", refreshToken, {
-            secure: false,
-            httpOnly: true,
-            sameSite: "lax",
-            maxAge: 1000 * 60 * 60 * 24
         });
 
         return { statusCode: HttpStatus.OK, message: "Usuario logeado con exito" }
@@ -88,21 +74,7 @@ export class AuthService {
 
         const user = await this.userService.findOne(refreshTokenFind.idRefreshToken);
 
-        const { accessToken, refreshToken } = await this.generateTokenJWT(user);
-
-        response.cookie("access_token", accessToken, {
-            secure: false,
-            httpOnly: true,
-            sameSite: "lax",
-            maxAge: 1000 * 60 * 60
-        });
-
-        response.cookie("refresh_token", refreshToken, {
-            secure: false,
-            httpOnly: true,
-            sameSite: "lax",
-            maxAge: 1000 * 60 * 60 * 24
-        });
+        await this.generateTokenJWT(user, response);
 
         return { message: "Token actualizado con exito", statusCode: HttpStatus.OK }
     }
@@ -117,27 +89,37 @@ export class AuthService {
         };
     }
 
-    private async generateTokenJWT(user: User): Promise<any> {
+    async generateTokenJWT(user: User, response: Response): Promise<void> {
 
         try {
 
             const payload = { userId: user.idUser, username: user.username };
-            const accessToken = await this.jwtService.signAsync(payload);
-            const refreshToken = await this.jwtService.signAsync(payload, { expiresIn: "1d" });
+            const accessToken = this.jwtService.sign(payload);
+            const refreshToken = this.jwtService.sign(payload, { expiresIn: "1d" });
 
             await this.storeRefreshToken(refreshToken, user.idUser);
 
-            return {
-                accessToken,
-                refreshToken
-            };
+            response.cookie("access_token", accessToken, {
+                secure: false,
+                httpOnly: true,
+                sameSite: "lax",
+                maxAge: 1000 * 60 * 60
+            });
+    
+            response.cookie("refresh_token", refreshToken, {
+                secure: false,
+                httpOnly: true,
+                sameSite: "lax",
+                maxAge: 1000 * 60 * 60 * 24
+            });
+
         } catch (error) {
             throw new BadRequestException("Error al generar el token");
         }
         
     }
 
-    private async storeRefreshToken(refreshToken: string, idUser: number): Promise<void> {
+    async storeRefreshToken(refreshToken: string, idUser: number): Promise<void> {
 
         const refreshTokenExists = await this.refreshTokenModel.findByPk(idUser);
 
@@ -151,6 +133,5 @@ export class AuthService {
             expiryDate,
             idRefreshToken: idUser
         })
-        
     }
 }
