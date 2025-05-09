@@ -1,6 +1,6 @@
 import { AuthenticationGuard } from "@core/guards/authentication.guard"
 import { faker } from "@faker-js/faker";
-import { ExecutionContext } from "@nestjs/common";
+import { ExecutionContext, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
 describe("AuthenticationGuard", () => {
@@ -13,27 +13,42 @@ describe("AuthenticationGuard", () => {
     const mockContext = {
         switchToHttp: jest.fn().mockReturnThis(),
         getRequest: jest.fn().mockReturnValue({
-
             cookies: {
                 access_token: tokenTest
             }
         })
     } as any as ExecutionContext;
 
+    const mockContextFailed = {
+        switchToHttp: jest.fn().mockReturnThis(),
+        getRequest: jest.fn().mockReturnValue({
+            cookies: {}
+        })
+    } as any as ExecutionContext;
+
     beforeEach(() => {
         jwtService = new JwtService();
         guard = new AuthenticationGuard(jwtService);
+
+        jest.clearAllMocks();
     });
 
     it("should be defined", () => {
-        expect(guard).toBeDefined()
+        expect(guard).toBeDefined();
     });
 
-    it("should validate the functionality that verifies the jsonwebtoken", () => {
+    it("should validate jsonwebtoken successfully", () => {
 
-        jest.spyOn(jwtService, "verifyAsync").mockResolvedValue({})
+        jest.spyOn(jwtService, "verify").mockResolvedValue({} as never);
 
         expect(guard.canActivate(mockContext)).toEqual(true);
-        expect(jwtService.verifyAsync).toHaveBeenCalledTimes(1);
+        expect(jwtService.verify).toHaveBeenCalledTimes(1);
+    });
+
+    it("should throw UnauthorizedException if token is not provided", () => {
+
+        jest.spyOn(jwtService, "verify").mockResolvedValue({} as never);
+
+        expect(() => guard.canActivate(mockContextFailed)).toThrow(UnauthorizedException);
     })
 })

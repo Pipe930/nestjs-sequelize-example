@@ -21,12 +21,11 @@ describe('StringTrimPipe', () => {
   })
 
   it('should be defined', () => {
-    expect(new StringTrimPipe()).toBeDefined();
+    expect(pipe).toBeDefined();
   });
 
   it('should trim a simple string', () => {
-    const result = pipe.transform('   hello world   ', { type: 'body' });
-    expect(result).toBe('hello world');
+    expect(pipe.transform('   hello world   ', { type: 'body' })).toBe('hello world');
   });
 
   it('should trim and remove internal spaces in object strings', () => {
