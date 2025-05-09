@@ -25,7 +25,7 @@ export class AuthService {
 
         const { email, password } = signInDto;
 
-        const user = await this.userService.userFindByEmail(email);
+        const user = await this.userService.findByEmail(email);
 
         if(!user) throw new BadRequestException("Usuario no encontrado con ese correo");
 

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from '@modules/auth/auth.controller';
 import { AuthService } from '@modules/auth/auth.service';
-import { mockAuthService, mockRepsonse, mockRequest, mockUser } from './mock.auth';
+import { mockAuthService, mockResponse, mockRequest, mockUser } from './mock.auth';
 import { JwtService } from '@nestjs/jwt';
 
 describe("AuthController", () => {
@@ -27,32 +27,32 @@ describe("AuthController", () => {
 
     it("should signin a user", async () => {
 
-        expect(await controller.signin(mockUser, mockRepsonse)).toEqual({
+        expect(await controller.signin(mockUser, mockResponse)).toEqual({
             email: mockUser.email,
             password: mockUser.password
         });
 
-        expect(mockAuthService.singIn).toHaveBeenCalledWith(mockUser, mockRepsonse);
+        expect(mockAuthService.singIn).toHaveBeenCalledWith(mockUser, mockResponse);
     });
 
     it("should logout a user", async () => {
 
-        expect(await controller.logout(mockRequest, mockRepsonse)).toEqual({
+        expect(await controller.logout(mockRequest, mockResponse)).toEqual({
             id: expect.any(Number),
-            response: mockRepsonse
+            response: mockResponse
         });
 
-        expect(mockAuthService.logout).toHaveBeenCalledWith(mockRequest.user.userId, mockRepsonse);
+        expect(mockAuthService.logout).toHaveBeenCalledWith(mockRequest.user.userId, mockResponse);
     });
 
     it("should refresh a token", async () => {
 
-        expect(await controller.refreshToken(mockRequest, mockRepsonse)).toEqual({
+        expect(await controller.refreshToken(mockRequest, mockResponse)).toEqual({
             request: mockRequest,
-            response: mockRepsonse
+            response: mockResponse
         });
 
-        expect(mockAuthService.refreshToken).toHaveBeenCalledWith(mockRequest, mockRepsonse);
+        expect(mockAuthService.refreshToken).toHaveBeenCalledWith(mockRequest, mockResponse);
     });
 
     it("should get user profile", async () => {

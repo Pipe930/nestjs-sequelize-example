@@ -9,18 +9,18 @@ export class AuthenticationGuard implements CanActivate {
     private readonly jwtService: JwtService
   ) {}
 
-  async canActivate(
+  canActivate(
     context: ExecutionContext,
-  ): Promise<boolean> {
+  ): boolean {
 
     const request: Request = context.switchToHttp().getRequest();
-    const token = request.cookies["access_token"];
+    const token: string = request.cookies["access_token"];
 
     if(!token) throw new UnauthorizedException("Token no provisto en la peticion");
 
     try{
 
-      const payload = await this.jwtService.verifyAsync(token);
+      const payload = this.jwtService.verify(token);
 
       request["user"] = payload;
     }catch(error) {

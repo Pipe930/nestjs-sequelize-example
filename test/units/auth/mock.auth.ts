@@ -8,6 +8,8 @@ export const mockUser: SignInDto = {
     password: faker.internet.password()
 }
 
+export const idUser = faker.number.int();
+
 export const mockAuthService = {
     singIn: jest.fn().mockImplementation(dto => dto),
     logout: jest.fn().mockImplementation((id, response) => ({id, response})),
@@ -15,8 +17,15 @@ export const mockAuthService = {
     userProfile: jest.fn().mockImplementation((id) => ({id}))
 }
 
-export const mockRefreshTokenModel = {
+export const refreshTokenTest = {
+    idRefreshToken: faker.number.int(),
+    token: faker.internet.jwt(),
+    expiryDate: faker.date.anytime()
+}
 
+export const mockRefreshTokenModel = {
+    destroy: jest.fn(),
+    findOne: jest.fn()
 }
 
 export const mockRequest = {
@@ -26,13 +35,20 @@ export const mockRequest = {
     }
 } as RequestJwt;
 
-export const mockUserModel = {
+export const mockRequestRefresh = {
+    cookies: {
+        refresh_token: faker.internet.jwt(),
+    },
+};
+
+export const mockUserServices = {
     findOne: jest.fn().mockResolvedValue({
         mockUser,
         update: jest.fn().mockReturnValue([1])
     })
 };
 
-export const mockRepsonse = {
-    cookie: jest.fn()
+export const mockResponse = {
+    cookie: jest.fn(),
+    clearCookie: jest.fn()
 } as any as Response;

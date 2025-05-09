@@ -147,7 +147,7 @@ export class UsersService {
     return { message: "Usuario eliminado exitosamente", statusCode: HttpStatus.NO_CONTENT };
   }
 
-  async userFindByEmail(email: string): Promise<User | null>{
+  async findByEmail(email: string): Promise<User | null>{
 
     const user = await this.userModel.findOne({
       where: {
