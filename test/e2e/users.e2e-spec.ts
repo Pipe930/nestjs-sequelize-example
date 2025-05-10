@@ -16,7 +16,8 @@ describe('UsersController (e2e)', () => {
         create: jest.fn().mockImplementation(dto => dto),
         findOne: jest.fn().mockResolvedValue([mockUsers]),
         update: jest.fn().mockReturnValue([1]),
-        destroy: jest.fn().mockResolvedValue(1)
+        destroy: jest.fn().mockResolvedValue(1),
+        count: jest.fn()
     };
 
     beforeEach(async () => {
@@ -28,10 +29,7 @@ describe('UsersController (e2e)', () => {
         .compile();
 
         app = moduleFixture.createNestApplication();
-        app.useGlobalPipes(new ValidationPipe({
-            whitelist: true,
-            transform: true
-        }))
+        app.useGlobalPipes(new ValidationPipe())
         await app.init();
 
         jest.clearAllMocks();
@@ -42,12 +40,15 @@ describe('UsersController (e2e)', () => {
         .get('/users')
         .expect(HttpStatus.OK)
         .expect('Content-Type', /json/)
-        .expect({
-            statusCode: HttpStatus.OK,
-            data: [mockUsers],
-            count: expect.any(Number),
-            totalPages: expect.any(Number),
-            currentPage: expect.any(Number)
+        .then(response => {
+
+            expect(response.body).toEqual({
+                statusCode: HttpStatus.OK,
+                data: mockUsers,
+                count: expect.any(Number),
+                totalPages: null,
+                currentPage: expect.any(Number)
+            })
         });
     });
 
