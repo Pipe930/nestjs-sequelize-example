@@ -3,6 +3,7 @@ import { PaginationDto } from '@modules/users/dto/pagination.dto';
 import { CreateUserDto } from '@modules/users/dto/create-user.dto';
 import { UpdateUserDto } from '@modules/users/dto/update-user.dto';
 import { SearchUserDto } from '@modules/users/dto/search-user.dto';
+import { Roles } from '@core/enums/role.enum';
 
 const passwordUserTest = faker.internet.password();
 export const idUser = faker.number.int();
@@ -25,16 +26,14 @@ export const userTest: CreateUserDto = {
     password: passwordUserTest,
     rePassword: passwordUserTest,
     active: faker.datatype.boolean(),
-    isStaff: faker.datatype.boolean(),
-    isSuperuser: faker.datatype.boolean(),
+    role: Roles.USER
 };
 
 export const userTestUpdate: UpdateUserDto = {
     username: faker.internet.username(),
     email: faker.internet.email(),
     active: faker.datatype.boolean(),
-    isStaff: faker.datatype.boolean(),
-    isSuperuser: faker.datatype.boolean(),
+    role: Roles.USER
 };
 
 export const mockUsersService = {

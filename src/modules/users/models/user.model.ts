@@ -1,5 +1,6 @@
 import { Column, CreatedAt, DataType, DeletedAt, HasOne, Model, Table, UpdatedAt } from "sequelize-typescript";
 import { RefreshToken } from "./tokenJwt.model";
+import { Roles } from "@core/enums/role.enum";
 
 @Table({
     tableName: "users",
@@ -60,20 +61,11 @@ export class User extends Model {
     declare active: boolean;
 
     @Column({
-        type: DataType.BOOLEAN,
+        type: DataType.ENUM(...Object.values(Roles)),
         allowNull: false,
-        defaultValue: false,
-        field: "is_staff"
+        defaultValue: Roles.USER
     })
-    declare isStaff: boolean;
-
-    @Column({
-        type: DataType.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-        field: "is_superuser"
-    })
-    declare isSuperuser: boolean;
+    declare role: Roles;
 
     @CreatedAt
     @Column({ field: "created_at" })

@@ -1,3 +1,4 @@
+import { Roles } from "@core/enums/role.enum"
 import { faker } from "@faker-js/faker"
 
 export const mockUsers = [
@@ -7,8 +8,7 @@ export const mockUsers = [
         email: faker.internet.email(),
         lastLogin: faker.date.anytime().toISOString(),
         active: faker.datatype.boolean(),
-        isStaff: faker.datatype.boolean(),
-        isSuperuser: faker.datatype.boolean(),
+        role: Roles.USER,
         createAt: faker.date.anytime().toISOString(),
         updateAt: faker.date.anytime().toISOString(),
         deleteAt: null

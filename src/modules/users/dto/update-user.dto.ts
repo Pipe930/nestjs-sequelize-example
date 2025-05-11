@@ -1,4 +1,5 @@
-import { IsBoolean, IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
+import { Roles } from '@core/enums/role.enum';
+import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class UpdateUserDto {
 
@@ -15,9 +16,6 @@ export class UpdateUserDto {
     @IsBoolean()
     readonly active: boolean;
 
-    @IsBoolean()
-    readonly isStaff: boolean;
-
-    @IsBoolean()
-    readonly isSuperuser: boolean;
+    @IsEnum(Roles)
+    readonly role: Roles;
 }

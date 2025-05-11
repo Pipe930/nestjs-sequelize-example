@@ -1,4 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
@@ -6,7 +7,8 @@ import { Request } from 'express';
 export class AuthenticationGuard implements CanActivate {
 
   constructor(
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService
   ) {}
 
   canActivate(
@@ -14,13 +16,15 @@ export class AuthenticationGuard implements CanActivate {
   ): boolean {
 
     const request: Request = context.switchToHttp().getRequest();
-    const token: string = request.cookies["access_token"];
+    const token = request.cookies["access_token"];
 
     if(!token) throw new UnauthorizedException("Token no provisto en la peticion");
 
     try{
 
-      const payload = this.jwtService.verify(token);
+      const payload = this.jwtService.verify(token, {
+        secret: this.configService.get<string>("keyJwt")
+      });
 
       request["user"] = payload;
     }catch(error) {

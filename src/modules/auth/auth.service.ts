@@ -93,7 +93,7 @@ export class AuthService {
 
         try {
 
-            const payload = { userId: user.idUser, username: user.username, staff: user.isStaff, superuser: user.isSuperuser };
+            const payload = { userId: user.idUser, username: user.username, role: user.role };
             const accessToken = this.jwtService.sign(payload);
             const refreshToken = this.jwtService.sign(payload, { expiresIn: "1d" });
 
