@@ -4,7 +4,7 @@
   "description": "Example project nestjs integration with sequelize (ORM) and JsonWebToken",
   "author": "Pipe930",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "keywords": [
     "javascript",
     "typescript",
