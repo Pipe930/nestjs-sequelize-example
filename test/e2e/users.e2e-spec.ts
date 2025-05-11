@@ -6,7 +6,7 @@ import { UsersModule } from '@modules/users/users.module';
 import { getModelToken } from '@nestjs/sequelize';
 import { User } from '@modules/users/models/user.model';
 import { userTest, userTestUpdate } from '../units/users/mock.users';
-import { mockUserFailed, mockUsers } from './test-data';
+import { mockUpdateUserFailed, mockUserFailed, mockUsers } from './test-data';
 
 describe('UsersController (e2e)', () => {
     let app: INestApplication<App>;
@@ -17,7 +17,7 @@ describe('UsersController (e2e)', () => {
         findOne: jest.fn().mockResolvedValue([mockUsers]),
         update: jest.fn().mockReturnValue([1]),
         destroy: jest.fn().mockResolvedValue(1),
-        count: jest.fn()
+        count: jest.fn().mockResolvedValue(mockUsers.length)
     };
 
     beforeEach(async () => {
@@ -46,7 +46,7 @@ describe('UsersController (e2e)', () => {
                 statusCode: HttpStatus.OK,
                 data: mockUsers,
                 count: expect.any(Number),
-                totalPages: null,
+                totalPages: expect.any(Number),
                 currentPage: expect.any(Number)
             })
         });
@@ -84,7 +84,6 @@ describe('UsersController (e2e)', () => {
     });
 
     it("/users/search (GET)", () => {
-
         return request(app.getHttpServer())
         .get('/users/search?username=test')
         .expect(HttpStatus.OK)
@@ -105,6 +104,14 @@ describe('UsersController (e2e)', () => {
                 statusCode: HttpStatus.OK
             })
         })
+    });
+
+    it('/users/:id (PUT) bad request exception', () => {
+        return request(app.getHttpServer())
+        .put('/users/1')
+        .send(mockUpdateUserFailed)
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect('Content-Type', /json/)
     });
 
     it('/users/:id (DELETE)', () => {

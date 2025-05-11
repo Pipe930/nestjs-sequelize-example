@@ -22,6 +22,12 @@ export const mockUserFailed = {
     password: true,
     rePassword: "",
     active: "",
-    isStaff: 12312,
-    isSuperuser: "dfs",
+    role: "fsdffsd"
+}
+
+export const mockUpdateUserFailed = {
+    username: 27372,
+    email: "dsdfs",
+    active: "",
+    role: "ds"
 }
