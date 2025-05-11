@@ -4,6 +4,7 @@ import { SignInDto } from './dto/signin.dto';
 import { AuthenticationGuard } from '@core/guards/authentication.guard'; 
 import { RequestJwt } from '@core/interfaces/request-jwt';
 import { Response } from 'express';
+import { ApiCookieAuth } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -15,17 +16,21 @@ export class AuthController {
     return this.authService.singIn(signInDto, response);
   }
 
+  @ApiCookieAuth()
   @UseGuards(AuthenticationGuard)
   @Get('logout')
   logout(@Req() request: RequestJwt, @Res({ passthrough: true }) response: Response){
     return this.authService.logout(request.user.userId, response);
   }
 
+  @ApiCookieAuth()
+  @UseGuards(AuthenticationGuard)
   @Get('refresh')
   refreshToken(@Req() request: RequestJwt, @Res({ passthrough: true }) response: Response){
     return this.authService.refreshToken(request, response);
   }
 
+  @ApiCookieAuth()
   @UseGuards(AuthenticationGuard)
   @Get('me')
   profile(@Req() request: RequestJwt){

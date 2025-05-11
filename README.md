@@ -1,3 +1,5 @@
+# Nestjs Sequelize Implementation Example
+
 ![Nest](assets/logo.png)
 
 ## Description
@@ -88,3 +90,19 @@ $ npm run test:e2e:watch
 ```
 
 All unit and e2e tests located within a folder called tests that is within each module will be executed, and the e2e tests are located in a folder called tests in the project root.
+
+## Documentation Swagger
+
+Documentation was created in Swagger to provide a better description of the different API endpoints.
+
+- Route -> http://localhost:3000/documentation
+
+## Docker Deploy
+
+Docker has been configured so you don't need to have the tools installed on your system. You just need to have [Docker](https://www.docker.com) installed. To run the project in a Docker environment, run the following command:
+
+```bash
+docker compose up
+```
+
+With just this command you run the application, creating the Docker images and running the project automatically.
