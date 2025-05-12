@@ -1,5 +1,5 @@
 import { Roles } from "@core/enums/role.enum";
-import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsString, Length } from "class-validator";
+import { IsBoolean, IsEmail, IsEnum, IsNotEmpty, IsString, Length, Matches } from "class-validator";
 
 export class CreateUserDto {
 
@@ -16,11 +16,13 @@ export class CreateUserDto {
     @IsString()
     @IsNotEmpty()
     @Length(8, 32)
+    @Matches(/^(?=.*[0-9])/, { message: 'Password must contain at least one number' })
     readonly password: string;
 
     @IsString()
     @IsNotEmpty()
     @Length(8, 32)
+    @Matches(/^(?=.*[0-9])/, { message: 'Password must contain at least one number' })
     readonly rePassword: string;
 
     @IsBoolean()

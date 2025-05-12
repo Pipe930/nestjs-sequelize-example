@@ -10,13 +10,15 @@ import { User } from '@modules/users/models/user.model';
 import { RefreshToken } from '@modules/users/models/tokenJwt.model';
 import { PostsModule } from '@modules/posts/posts.module';
 import { ContentTypeMiddleware } from '@core/middlewares/content-type.middleware';
+import { envSchema } from '@config/envSchema';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: ".env",
       isGlobal: true,
-      load: [AppConfigEnvironment]
+      load: [AppConfigEnvironment],
+      validationSchema: envSchema
     }),
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],

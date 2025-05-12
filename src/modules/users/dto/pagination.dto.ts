@@ -1,5 +1,6 @@
+import { OrderEnum } from "@core/enums/order.enum";
 import { Transform } from "class-transformer";
-import { IsIn, IsNumber, IsOptional, Min } from "class-validator";
+import { IsEnum, IsIn, IsNumber, IsOptional, Min } from "class-validator";
 
 
 export class PaginationDto {
@@ -20,6 +21,6 @@ export class PaginationDto {
     readonly sortBy?: string;
 
     @IsOptional()
-    @IsIn(["asc", "desc"])
-    readonly order?: "asc" | "desc";
+    @IsEnum(OrderEnum)
+    readonly order?: OrderEnum;
 }

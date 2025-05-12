@@ -4,6 +4,7 @@ import { CreateUserDto } from '@modules/users/dto/create-user.dto';
 import { UpdateUserDto } from '@modules/users/dto/update-user.dto';
 import { SearchUserDto } from '@modules/users/dto/search-user.dto';
 import { Roles } from '@core/enums/role.enum';
+import { OrderEnum } from '@core/enums/order.enum';
 
 const passwordUserTest = faker.internet.password();
 export const idUser = faker.number.int();
@@ -12,7 +13,7 @@ export const paginationTest: PaginationDto = {
     page: faker.number.int({ min: 1, max: 100 }),
     limit: faker.number.int({ min: 1, max: 100 }),
     sortBy: 'email',
-    order: 'desc' as 'asc' | 'desc',
+    order: OrderEnum.ASC,
 };
 
 export const searchTest: SearchUserDto = {
@@ -28,6 +29,15 @@ export const userTest: CreateUserDto = {
     active: faker.datatype.boolean(),
     role: Roles.USER
 };
+
+export const userMockFailed = {
+    username: faker.internet.username(),
+    email: faker.internet.email(),
+    password: "1233123",
+    rePassword: "347983",
+    active: faker.datatype.boolean(),
+    role: Roles.USER
+}
 
 export const userTestUpdate: UpdateUserDto = {
     username: faker.internet.username(),
@@ -59,5 +69,5 @@ export const mockUserModel = {
     findAll: jest.fn().mockResolvedValue([userTest]),
     findOne: jest.fn().mockResolvedValue(userTest),
     destroy: jest.fn().mockResolvedValue(1),
-    count: jest.fn(),
+    count: jest.fn().mockResolvedValue(1),
 };

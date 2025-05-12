@@ -7,11 +7,12 @@ import {
     mockUserModel,
     paginationTest,
     searchTest,
+    userMockFailed,
     userTest,
     userTestUpdate,
 } from './mock.users';
 import { Op } from 'sequelize';
-import { HttpStatus } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpStatus, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 
 describe('UserService', () => {
@@ -50,6 +51,21 @@ describe('UserService', () => {
         expect(mockUserModel.create).toHaveBeenCalledTimes(1);
     });
 
+    it('should throw a bad request exception for invalid passwords', async () => {
+
+        await expect(service.create(userMockFailed)).rejects.toThrow(BadRequestException)
+    });
+
+    it('should throw ConflictException if email or username is already registered', async () => {
+
+        const error = new Error();
+        error.name = "SequelizeUniqueConstraintError";
+
+        mockUserModel.create.mockRejectedValue(error)
+
+        await expect(service.create(userTest)).rejects.toThrow(ConflictException);
+    });
+
     it('should return a list of users', async () => {
 
         expect(await service.findAll(paginationTest)).toEqual({
@@ -77,6 +93,12 @@ describe('UserService', () => {
             where: { idUser },
             attributes: { exclude: ['password'] },
         });
+    });
+
+    it('should return not found user exception', async () => {
+        mockUserModel.findOne.mockResolvedValue(undefined);
+
+        await expect(service.findOne(idUser)).rejects.toThrow(NotFoundException);
     });
 
     it('should return a list of users by search', async () => {
