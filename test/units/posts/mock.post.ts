@@ -1,3 +1,4 @@
+import { OrderEnum } from '@core/enums/order.enum';
 import { faker } from '@faker-js/faker';
 import { CreatePostDto } from '@modules/posts/dto/create-post.dto';
 import { PaginationDto } from '@modules/users/dto/pagination.dto';
@@ -38,7 +39,7 @@ export const paginationTest: PaginationDto = {
     page: faker.number.int({ min: 1, max: 100 }),
     limit: faker.number.int({ min: 1, max: 100 }),
     sortBy: 'email',
-    order: 'desc' as 'asc' | 'desc',
+    order: OrderEnum.ASC,
 };
 
 export const configModel = {
