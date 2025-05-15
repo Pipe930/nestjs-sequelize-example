@@ -20,14 +20,14 @@ export class PostsController {
     return this.postsService.findAll(paginationDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.postsService.findOne(id);
-  }
-
   @Get('search')
   search(@Query() searchPostDto: SearchPostDto) {
     return this.postsService.searchPost(searchPostDto);
+  }
+
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.postsService.findOne(id);
   }
 
   @Put(':id')

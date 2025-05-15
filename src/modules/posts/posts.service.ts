@@ -101,7 +101,7 @@ export class PostsService {
 
   async searchPost(searchPostDto: SearchPostDto): Promise<Post[]> {
 
-    const { title, subtitle } = searchPostDto;
+    const { title="", subtitle="" } = searchPostDto;
 
     const posts = await this.postModel.findAll({
       where: {

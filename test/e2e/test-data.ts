@@ -31,3 +31,20 @@ export const mockUpdateUserFailed = {
     active: "",
     role: "ds"
 }
+
+export const mockPost = [
+    {
+        idPost: faker.number.int(),
+        title: faker.lorem.text(),
+        subtitle: faker.lorem.text(),
+        slug: faker.lorem.slug(),
+        content: faker.lorem.sentences(),
+        likes: faker.number.int({min: 1, max: 5000}),
+        dislikes: faker.number.int({min: 1, max: 5000}),
+        published: faker.datatype.boolean(),
+        views: faker.number.int({min: 1, max: 100000}),
+        createAt: faker.date.anytime().toISOString(),
+        updateAt: faker.date.anytime().toISOString(),
+        deleteAt: null
+    }
+]

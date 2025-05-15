@@ -1,6 +1,6 @@
-import Joi from "joi";
+import * as Joi from "joi";
 
-export const envSchema = {
+export const envSchema = Joi.object({
 
     PORT: Joi.number().required().default(3000),
     SECRET_JWT: Joi.string().required(),
@@ -10,4 +10,4 @@ export const envSchema = {
     DATABASE_NAME: Joi.string().required(),
     DATABASE_USER: Joi.string().required(),
     DATABASE_PASSWORD: Joi.string().required(),
-}
+})

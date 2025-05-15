@@ -1,0 +1,12 @@
+node_modules
+test
+.gitignore
+.git
+.prettierrc
+assets
+coverage
+.vscode
+jest-e2e.config.ts
+jest.config.ts
+eslint.config.mjs
+LICENSE

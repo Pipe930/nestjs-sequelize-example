@@ -8,6 +8,8 @@ import {
     paginationTest,
     searchTest,
 } from './mock.users';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 describe('UsersController', () => {
     let controller: UsersController;
@@ -15,7 +17,7 @@ describe('UsersController', () => {
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             controllers: [UsersController],
-            providers: [UsersService],
+            providers: [UsersService, JwtService, ConfigService],
         })
         .overrideProvider(UsersService)
         .useValue(mockUsersService)

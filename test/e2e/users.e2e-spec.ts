@@ -22,7 +22,7 @@ describe('UsersController (e2e)', () => {
 
     beforeEach(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
-        imports: [UsersModule],
+            imports: [UsersModule]
         })
         .overrideProvider(getModelToken(User))
         .useValue(mockUserModel)
@@ -35,35 +35,31 @@ describe('UsersController (e2e)', () => {
         jest.clearAllMocks();
     });
 
-    it('/users (GET)', () => {
-        return request(app.getHttpServer())
-        .get('/users')
-        .expect(HttpStatus.OK)
-        .expect('Content-Type', /json/)
-        .then(response => {
+    it('/users (GET)', async () => {
+        const response = await request(app.getHttpServer())
+            .get('/users')
+            .expect(HttpStatus.OK)
+            .expect('Content-Type', /json/);
 
-            expect(response.body).toEqual({
-                statusCode: HttpStatus.OK,
-                data: mockUsers,
-                count: expect.any(Number),
-                totalPages: expect.any(Number),
-                currentPage: expect.any(Number)
-            })
+        expect(response.body).toEqual({
+            statusCode: HttpStatus.OK,
+            data: mockUsers,
+            count: expect.any(Number),
+            totalPages: expect.any(Number),
+            currentPage: expect.any(Number)
         });
     });
 
-    it('/users (POST)', () => {
-        return request(app.getHttpServer())
-        .post('/users')
-        .send(userTest)
-        .expect(HttpStatus.CREATED)
-        .expect('Content-Type', /json/)
-        .then(response => {
-
-            expect(response.body).toEqual({
-                message: expect.any(String),
-                statusCode: HttpStatus.CREATED
-            })
+    it('/users (POST)', async () => {
+        const response = await request(app.getHttpServer())
+            .post('/users')
+            .send(userTest)
+            .expect(HttpStatus.CREATED)
+            .expect('Content-Type', /json/);
+        
+        expect(response.body).toEqual({
+            message: expect.any(String),
+            statusCode: HttpStatus.CREATED
         });
     });
 
@@ -91,19 +87,17 @@ describe('UsersController (e2e)', () => {
         .expect(mockUsers)
     })
 
-    it('/users/:id (PUT)', () => {
-        return request(app.getHttpServer())
-        .put('/users/1')
-        .send(userTestUpdate)
-        .expect(HttpStatus.OK)
-        .expect('Content-Type', /json/)
-        .then(response => {
-
-            expect(response.body).toEqual({
-                message: expect.any(String),
-                statusCode: HttpStatus.OK
-            })
-        })
+    it('/users/:id (PUT)', async () => {
+        const response = await request(app.getHttpServer())
+            .put('/users/1')
+            .send(userTestUpdate)
+            .expect(HttpStatus.OK)
+            .expect('Content-Type', /json/);
+        
+        expect(response.body).toEqual({
+            message: expect.any(String),
+            statusCode: HttpStatus.OK
+        });
     });
 
     it('/users/:id (PUT) bad request exception', () => {
@@ -114,17 +108,15 @@ describe('UsersController (e2e)', () => {
         .expect('Content-Type', /json/)
     });
 
-    it('/users/:id (DELETE)', () => {
-        return request(app.getHttpServer())
-        .delete('/users/1')
-        .expect(HttpStatus.OK)
-        .expect('Content-Type', /json/)
-        .then(response => {
+    it('/users/:id (DELETE)', async () => {
+        const response = await request(app.getHttpServer())
+            .delete('/users/1')
+            .expect(HttpStatus.OK)
+            .expect('Content-Type', /json/);
 
-            expect(response.body).toEqual({
-                message: expect.any(String),
-                statusCode: HttpStatus.NO_CONTENT
-            })
+        expect(response.body).toEqual({
+            message: expect.any(String),
+            statusCode: HttpStatus.NO_CONTENT
         });
     });
 
