@@ -93,8 +93,8 @@ export class UsersService {
 
     const users = await this.userModel.findAll<User>({
       where: {
-        username: { [Op.iLike]: `%${username}%` },
-        email: { [Op.iLike]: `%${email}%` } 
+        username: { [Op.like]: `%${username}%` },
+        email: { [Op.like]: `%${email}%` } 
       },
       attributes: {
         exclude: ["password"]

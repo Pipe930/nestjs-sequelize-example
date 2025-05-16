@@ -105,8 +105,8 @@ export class PostsService {
 
     const posts = await this.postModel.findAll({
       where: {
-        title: { [Op.iLike]: `%${title}%` },
-        subtitle: { [Op.iLike]: `%${subtitle}%` } 
+        title: { [Op.like]: `%${title}%` },
+        subtitle: { [Op.like]: `%${subtitle}%` } 
       },
       ...this.configModel
     })
